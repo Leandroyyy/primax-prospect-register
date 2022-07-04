@@ -8,11 +8,11 @@ export function Footer() {
         <a
           href="https://www.primaxacademia.com.br"
           target="_blank"
-          className="text-white bg-[#2196F3] rounded-md py-0.5 px-2 hover:bg-white hover:text-[#2196F3] duration-300
+          className="text-white border-white border-2 rounded-md py-0.5 px-2 hover:text-[#2196F3] hover:border-[#2196F3] duration-300
             sm:py-1 sm:pb-2 sm:px-3 sm:text-2xl
           "
         >
-          Conheça nosso site
+          Visite nosso site
         </a>
       </div>
 
