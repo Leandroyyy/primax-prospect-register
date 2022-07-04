@@ -8,14 +8,11 @@ import { useState } from 'react'
 
 function App() {
 
-  const [modal, setModal] = useState<boolean>(false)
-
   return (
     <>
       <NavBar/>
       <ProspectForm/>
       <Footer/>
-      <ProspectFinished trigger={modal} setTrigger={() => setModal(false)}/>
     </>
   )
 }
