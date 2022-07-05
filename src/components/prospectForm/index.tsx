@@ -18,10 +18,8 @@ interface Prospect {
   currentStep:string
 }
 
-// username : PRIMAXFITNESS
-// password : F1CB048D-C7F9-447D-9627-09BCA7B44A03
-
 export function ProspectForm() {
+
 
   const [modal, setModal] = useState<boolean>(false)
   const [genderNull, isGenderNull] = useState<boolean>(false);
@@ -75,8 +73,8 @@ export function ProspectForm() {
     const emailAlreadyExists = await evoUrl.get(`/members?email=${data.email}`, {
       headers:{
         'username':'PRIMAXFITNESS',
-        'password':'0E2C8476-A2B2-44E2-B260-F35F24BC81CD',
-        'Authorization':"Basic UFJJTUFYRklUTkVTUzowRTJDODQ3Ni1BMkIyLTQ0RTItQjI2MC1GMzVGMjRCQzgxQ0Q="
+        'password':'F1CB048D-C7F9-447D-9627-09BCA7B44A03',
+        'Authorization':"Basic UFJJTUFYRklUTkVTUzpGMUNCMDQ4RC1DN0Y5LTQ0N0QtOTYyNy0wOUJDQTdCNDRBMDM="
       }
     }).then((request) => request.data)
 
@@ -90,8 +88,8 @@ export function ProspectForm() {
     const cellphoneAlreadyExistsProspect = await evoUrl.get(`/prospects?phone=${data.cellphone}`, {
       headers:{
         'username':'PRIMAXFITNESS',
-        'password':'0E2C8476-A2B2-44E2-B260-F35F24BC81CD',
-        'Authorization':"Basic UFJJTUFYRklUTkVTUzowRTJDODQ3Ni1BMkIyLTQ0RTItQjI2MC1GMzVGMjRCQzgxQ0Q="
+        'password':'F1CB048D-C7F9-447D-9627-09BCA7B44A03',
+        'Authorization':"Basic UFJJTUFYRklUTkVTUzpGMUNCMDQ4RC1DN0Y5LTQ0N0QtOTYyNy0wOUJDQTdCNDRBMDM="
       }
     }).then((request) => request.data)
 
@@ -99,8 +97,8 @@ export function ProspectForm() {
     const cellphoneAlreadyExistsMember = await evoUrl.get(`/members?phone=${data.cellphone}`, {
       headers:{
         'username':'PRIMAXFITNESS',
-        'password':'0E2C8476-A2B2-44E2-B260-F35F24BC81CD',
-        'Authorization':"Basic UFJJTUFYRklUTkVTUzowRTJDODQ3Ni1BMkIyLTQ0RTItQjI2MC1GMzVGMjRCQzgxQ0Q="
+        'password':'F1CB048D-C7F9-447D-9627-09BCA7B44A03',
+        'Authorization':"Basic UFJJTUFYRklUTkVTUzpGMUNCMDQ4RC1DN0Y5LTQ0N0QtOTYyNy0wOUJDQTdCNDRBMDM="
       }
     }).then((request) => request.data)
 
@@ -118,8 +116,8 @@ export function ProspectForm() {
     await evoUrl.post('/prospects', allData , {
       headers:{
         'username':'PRIMAXFITNESS',
-        'password':'0E2C8476-A2B2-44E2-B260-F35F24BC81CD',
-        'Authorization':"Basic UFJJTUFYRklUTkVTUzowRTJDODQ3Ni1BMkIyLTQ0RTItQjI2MC1GMzVGMjRCQzgxQ0Q="
+        'password':'F1CB048D-C7F9-447D-9627-09BCA7B44A03',
+        'Authorization':"Basic UFJJTUFYRklUTkVTUzpGMUNCMDQ4RC1DN0Y5LTQ0N0QtOTYyNy0wOUJDQTdCNDRBMDM="
       }
     })
       .then(()=>{console.log('feito com sucesso')}).catch((e:any)=>{
