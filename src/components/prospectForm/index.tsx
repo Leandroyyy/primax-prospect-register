@@ -79,9 +79,7 @@ export function ProspectForm() {
     }).then((request) => request.data)
 
     if(emailAlreadyExists.length != 0 ) {
-        console.log('email já existente')
         isAlreadyExistsEmail(true);
-        console.log(alreadyExistsEmail)
         throw new Error("email ja existe")
     }
 
@@ -120,8 +118,8 @@ export function ProspectForm() {
         'Authorization':"Basic UFJJTUFYRklUTkVTUzpBQ0EyRDI4Mi0wQzYxLTQwNzEtODBFNy0xRkVFNzEzRDEyN0I="
       }
     })
-      .then(()=>{console.log('feito com sucesso')}).catch((e:any)=>{
-        console.log(e.message)
+      .then().catch((e:any)=>{
+        throw new Error(e.message)
       })
 
     setModal(true)
