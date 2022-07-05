@@ -13,7 +13,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='/pre-register' element={<RegisterProspect/>}/>
+        <Route path='pre-register' element={<RegisterProspect/>}/>
       </Routes>
     </BrowserRouter>
   )
