@@ -15,8 +15,8 @@ interface Prospect {
   cellphone:string
   birthday:string
   gender:string
+  currentStep:string
 }
-
 
 // username : PRIMAXFITNESS
 // password : F1CB048D-C7F9-447D-9627-09BCA7B44A03
@@ -24,10 +24,13 @@ interface Prospect {
 export function ProspectForm() {
 
   const [modal, setModal] = useState<boolean>(false)
+  const [genderNull, isGenderNull] = useState<boolean>(false);
+  const [resetCellphone, setResetCellphone] = useState<string>();
+  const [resetBirthday, setResetBirthday] = useState<string>();
+  const [alreadyExistsEmail, isAlreadyExistsEmail] = useState<boolean>(false);
+  const [alreadyExistsCellphone, isAlreadyExistsCellphone] = useState<boolean>(false);
 
-  const [prospect , setProspect] = useState<Prospect>();
-
-  const {register, handleSubmit, formState:{errors}} = useForm<Prospect>()
+  const {register, handleSubmit, formState:{errors}, reset} = useForm<Prospect>()
 
   const registerValidations = {
     name:{
@@ -37,7 +40,7 @@ export function ProspectForm() {
       required:"O sobrenome é obrigatório"
     },
     email:{
-      required:"o email é obrigatório"
+      required:"O email é obrigatório",
     },
     cellphone:{
       required:"O número de celular é obrigatório"
@@ -48,7 +51,10 @@ export function ProspectForm() {
   }
 
   async function handleData(data:Prospect): Promise<Prospect>{
-    
+    isAlreadyExistsEmail(false)
+    isAlreadyExistsCellphone(false)
+    isGenderNull(false)
+
     let date = data.birthday.split("/")
 
     let day = date[0]
@@ -59,6 +65,12 @@ export function ProspectForm() {
 
     data.name = data.name.toUpperCase()
     data.lastName = data.lastName.toUpperCase()
+    data.currentStep = "AGENDAR AULA EXPERIMENTAL"
+
+    if(!data.gender){
+      isGenderNull(true)
+      throw new Error("Favor coloque o gênero")
+    }
 
     const emailAlreadyExists = await evoUrl.get(`/members?email=${data.email}`, {
       headers:{
@@ -66,21 +78,42 @@ export function ProspectForm() {
         'password':'0E2C8476-A2B2-44E2-B260-F35F24BC81CD',
         'Authorization':"Basic UFJJTUFYRklUTkVTUzowRTJDODQ3Ni1BMkIyLTQ0RTItQjI2MC1GMzVGMjRCQzgxQ0Q="
       }
-    })
+    }).then((request) => request.data)
 
-    if(emailAlreadyExists){
-      console.log('email já existente')
-      throw new Error("email ja existe")
+    if(emailAlreadyExists.length != 0 ) {
+        console.log('email já existente')
+        isAlreadyExistsEmail(true);
+        console.log(alreadyExistsEmail)
+        throw new Error("email ja existe")
+    }
+
+    const cellphoneAlreadyExistsProspect = await evoUrl.get(`/prospects?phone=${data.cellphone}`, {
+      headers:{
+        'username':'PRIMAXFITNESS',
+        'password':'0E2C8476-A2B2-44E2-B260-F35F24BC81CD',
+        'Authorization':"Basic UFJJTUFYRklUTkVTUzowRTJDODQ3Ni1BMkIyLTQ0RTItQjI2MC1GMzVGMjRCQzgxQ0Q="
+      }
+    }).then((request) => request.data)
+
+
+    const cellphoneAlreadyExistsMember = await evoUrl.get(`/members?phone=${data.cellphone}`, {
+      headers:{
+        'username':'PRIMAXFITNESS',
+        'password':'0E2C8476-A2B2-44E2-B260-F35F24BC81CD',
+        'Authorization':"Basic UFJJTUFYRklUTkVTUzowRTJDODQ3Ni1BMkIyLTQ0RTItQjI2MC1GMzVGMjRCQzgxQ0Q="
+      }
+    }).then((request) => request.data)
+
+    if(cellphoneAlreadyExistsProspect.length != 0 || cellphoneAlreadyExistsMember.length != 0){
+      isAlreadyExistsCellphone(true)
+      throw new Error("celular já existe")
     }
 
     return data
-
   }
 
   const onSubmit = handleSubmit( async (data)=>{
-
-
-    const allData = handleData(data)
+    const allData = await handleData(data)
 
     await evoUrl.post('/prospects', allData , {
       headers:{
@@ -91,9 +124,32 @@ export function ProspectForm() {
     })
       .then(()=>{console.log('feito com sucesso')}).catch((e:any)=>{
         console.log(e.message)
-        console.log('deu merda')
       })
+
+    setModal(true)
   })
+
+  function onChangeBirthday(e: React.FormEvent<HTMLInputElement>){
+    const birthday = e.currentTarget.value
+
+    setResetBirthday(birthday)
+  }
+
+  function onChangeCellphone(e: React.FormEvent<HTMLInputElement>){
+    const cellphone = e.currentTarget.value
+
+    setResetCellphone(cellphone)
+  }
+
+  function resetForm(){
+
+    reset()
+
+    setResetBirthday("")
+    setResetCellphone("")
+
+    setModal(false)
+  }
 
   return (
     <div className="flex items-center justify-center mt-5 bg-[#323232] py-10">
@@ -198,6 +254,10 @@ export function ProspectForm() {
             </div>
           </div>
 
+          <small className="text-red-500 mb-2 px-2">
+              {genderNull ? "Selecione o Gênero" : ""}
+          </small>
+
           <div className="flex flex-col">
             <label
               htmlFor="email"
@@ -214,7 +274,8 @@ export function ProspectForm() {
               className="w-64 h-7 sm:w-[30rem] sm:h-10 sm:text-xl focus:border-1 focus-visible:ring rounded-md outline-none focus:border-[#2196F3] focus:placeholder-[#2196f3] pl-3"
             />
              <small className="text-red-500 mb-2 px-2">
-              {errors?.email && errors.email.message }
+              {errors?.email && errors.email.message}
+              {alreadyExistsEmail ? "E-mail já existente" : ""}
             </small>
           </div>
 
@@ -232,10 +293,13 @@ export function ProspectForm() {
               mask="(99)99999-9999"
               {...register("cellphone", registerValidations.cellphone)}
               defaultValue=''
+              onChange={onChangeCellphone}
+              value={resetCellphone}
               className="w-64 h-7 sm:w-[30rem] sm:h-10 sm:text-xl focus:border-1 focus-visible:ring rounded-md outline-none focus:border-[#2196F3] focus:placeholder-[#2196f3] pl-3"
             />
             <small className="text-red-500 mb-2 px-2">
               {errors?.cellphone && errors.cellphone.message }
+              {alreadyExistsCellphone ? "Celular já existente" : ""}
             </small>
           </div>
 
@@ -252,6 +316,8 @@ export function ProspectForm() {
               mask="99/99/9999"
               {...register("birthday", registerValidations.birthday)}
               defaultValue=''
+              onChange={onChangeBirthday}
+              value={resetBirthday}
               placeholder="dd/mm/yyyy"
               className="w-64 h-7 sm:w-[30rem] sm:h-10 sm:text-xl focus:border-1 focus-visible:ring rounded-md outline-none focus:border-[#2196F3] focus:placeholder-[#2196f3] pl-3"
             />
@@ -269,7 +335,7 @@ export function ProspectForm() {
         </div>
       </form>
 
-      <ProspectFinished trigger={modal} setTrigger={() => setModal(false)}/>
+      <ProspectFinished trigger={modal} setTrigger={() => resetForm()}/>
     </div>
   );
 }

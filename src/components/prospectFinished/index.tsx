@@ -9,8 +9,8 @@ interface TriggerProps{
 export function ProspectFinished(props:TriggerProps):any{
 
     return props.trigger ? (
-        <div className="fixed inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex items-center justify-center">
-            <div className="bg-[#2196F3] px-2 rounded-md w-72 flex flex-col items-center justify-center ">
+        <div className="fixed inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex items-center justify-center ">
+            <div className="bg-[#2196F3] px-2 rounded-md w-72 flex flex-col items-center justify-center border-white border-2">
                 <h1 className='text-white font-extrabold py-10'>Pré-Cadastro feito com Sucesso !!</h1>
                 <AiOutlineCheckCircle className='text-white text-[10rem] animate-pulse'/>
                 <h2 className='text-white my-5 px-4 py-2 border-2'>Agora passe na <u><strong>recepção</strong></u> da
