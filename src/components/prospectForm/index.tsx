@@ -1,155 +1,180 @@
 import { useState } from "react";
 import InputMask from "react-input-mask";
 import { ProspectFinished } from "../prospectFinished";
-import { useForm } from 'react-hook-form'
+import { useForm } from "react-hook-form";
 import axios from "axios";
-
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 const evoUrl = axios.create({
-  baseURL:'https://evo-integracao.w12app.com.br/api/v1/'
-})
+  baseURL: "https://evo-integracao.w12app.com.br/api/v1/",
+});
 interface Prospect {
-  name:string
-  lastName:string
-  email:string
-  cellphone:string
-  birthday:string
-  gender:string
-  currentStep:string
+  name: string;
+  lastName: string;
+  email: string;
+  cellphone: string;
+  birthday: string;
+  gender: string;
+  currentStep: string;
 }
 
 export function ProspectForm() {
-
-
-  const [modal, setModal] = useState<boolean>(false)
+  const [modal, setModal] = useState<boolean>(false);
   const [genderNull, isGenderNull] = useState<boolean>(false);
+  const [loading, isLoading] = useState<boolean>(false);
   const [resetCellphone, setResetCellphone] = useState<string>();
   const [resetBirthday, setResetBirthday] = useState<string>();
   const [alreadyExistsEmail, isAlreadyExistsEmail] = useState<boolean>(false);
-  const [alreadyExistsCellphone, isAlreadyExistsCellphone] = useState<boolean>(false);
+  const [alreadyExistsCellphone, isAlreadyExistsCellphone] =
+    useState<boolean>(false);
 
-  const {register, handleSubmit, formState:{errors}, reset} = useForm<Prospect>()
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<Prospect>();
 
   const registerValidations = {
-    name:{
-      required:"O nome é obrigatório"
+    name: {
+      required: "O nome é obrigatório",
     },
-    lastName:{
-      required:"O sobrenome é obrigatório"
+    lastName: {
+      required: "O sobrenome é obrigatório",
     },
-    email:{
-      required:"O email é obrigatório",
+    email: {
+      required: "O email é obrigatório",
     },
-    cellphone:{
-      required:"O número de celular é obrigatório"
+    cellphone: {
+      required: "O número de celular é obrigatório",
     },
-    birthday:{
-      required:"A data de nascimento é obrigatório"
-    }
-  }
+    birthday: {
+      required: "A data de nascimento é obrigatório",
+    },
+  };
 
-  async function handleData(data:Prospect): Promise<Prospect>{
-    isAlreadyExistsEmail(false)
-    isAlreadyExistsCellphone(false)
-    isGenderNull(false)
+  async function handleData(data: Prospect): Promise<Prospect> {
+    isAlreadyExistsEmail(false);
+    isAlreadyExistsCellphone(false);
+    isGenderNull(false);
+    isLoading(true);
 
-    let date = data.birthday.split("/")
+    let date = data.birthday.split("/");
 
-    let day = date[0]
-    date[0] = date[1]
-    date[1] = day
+    let day = date[0];
+    date[0] = date[1];
+    date[1] = day;
 
-    data.birthday = date.join('/')
+    data.birthday = date.join("/");
 
-    data.name = data.name.toUpperCase()
-    data.lastName = data.lastName.toUpperCase()
-    data.currentStep = "AGENDAR AULA EXPERIMENTAL"
+    data.name = data.name.toUpperCase();
+    data.lastName = data.lastName.toUpperCase();
+    data.currentStep = "AGENDAR AULA EXPERIMENTAL";
 
-    if(!data.gender){
-      isGenderNull(true)
-      throw new Error("Favor coloque o gênero")
-    }
-
-    const emailAlreadyExists = await evoUrl.get(`/members?email=${data.email}`, {
-      headers:{
-        'username':'PRIMAXFITNESS',
-        'password':'ACA2D282-0C61-4071-80E7-1FEE713D127B',
-        'Authorization':"Basic UFJJTUFYRklUTkVTUzpBQ0EyRDI4Mi0wQzYxLTQwNzEtODBFNy0xRkVFNzEzRDEyN0I="
-      }
-    }).then((request) => request.data)
-
-    if(emailAlreadyExists.length != 0 ) {
-        isAlreadyExistsEmail(true);
-        throw new Error("email ja existe")
+    if (!data.gender) {
+      isGenderNull(true);
+      throw new Error("Favor coloque o gênero");
     }
 
-    const cellphoneAlreadyExistsProspect = await evoUrl.get(`/prospects?phone=${data.cellphone}`, {
-      headers:{
-        'username':'PRIMAXFITNESS',
-        'password':'ACA2D282-0C61-4071-80E7-1FEE713D127B',
-        'Authorization':"Basic UFJJTUFYRklUTkVTUzpBQ0EyRDI4Mi0wQzYxLTQwNzEtODBFNy0xRkVFNzEzRDEyN0I="
-      }
-    }).then((request) => request.data)
-
-
-    const cellphoneAlreadyExistsMember = await evoUrl.get(`/members?phone=${data.cellphone}`, {
-      headers:{
-        'username':'PRIMAXFITNESS',
-        'password':'ACA2D282-0C61-4071-80E7-1FEE713D127B',
-        'Authorization':"Basic UFJJTUFYRklUTkVTUzpBQ0EyRDI4Mi0wQzYxLTQwNzEtODBFNy0xRkVFNzEzRDEyN0I="
-      }
-    }).then((request) => request.data)
-
-    if(cellphoneAlreadyExistsProspect.length != 0 || cellphoneAlreadyExistsMember.length != 0){
-      isAlreadyExistsCellphone(true)
-      throw new Error("celular já existe")
-    }
-
-    return data
-  }
-
-  const onSubmit = handleSubmit( async (data)=>{
-    const allData = await handleData(data)
-
-    await evoUrl.post('/prospects', allData , {
-      headers:{
-        'username':'PRIMAXFITNESS',
-        'password':'ACA2D282-0C61-4071-80E7-1FEE713D127B',
-        'Authorization':"Basic UFJJTUFYRklUTkVTUzpBQ0EyRDI4Mi0wQzYxLTQwNzEtODBFNy0xRkVFNzEzRDEyN0I="
-      }
-    })
-      .then().catch((e:any)=>{
-        throw new Error(e.message)
+    const emailAlreadyExists = await evoUrl
+      .get(`/members?email=${data.email}`, {
+        headers: {
+          username: "PRIMAXFITNESS",
+          password: "ACA2D282-0C61-4071-80E7-1FEE713D127B",
+          Authorization:
+            "Basic UFJJTUFYRklUTkVTUzpBQ0EyRDI4Mi0wQzYxLTQwNzEtODBFNy0xRkVFNzEzRDEyN0I=",
+        },
       })
+      .then((request) => request.data);
 
-    setModal(true)
-  })
+    if (emailAlreadyExists.length != 0) {
+      isLoading(false);
+      isAlreadyExistsEmail(true);
+      throw new Error("email ja existe");
+    }
 
-  function onChangeBirthday(e: React.FormEvent<HTMLInputElement>){
-    const birthday = e.currentTarget.value
+    const cellphoneAlreadyExistsProspect = await evoUrl
+      .get(`/prospects?phone=${data.cellphone}`, {
+        headers: {
+          username: "PRIMAXFITNESS",
+          password: "ACA2D282-0C61-4071-80E7-1FEE713D127B",
+          Authorization:
+            "Basic UFJJTUFYRklUTkVTUzpBQ0EyRDI4Mi0wQzYxLTQwNzEtODBFNy0xRkVFNzEzRDEyN0I=",
+        },
+      })
+      .then((request) => request.data);
 
-    setResetBirthday(birthday)
+    const cellphoneAlreadyExistsMember = await evoUrl
+      .get(`/members?phone=${data.cellphone}`, {
+        headers: {
+          username: "PRIMAXFITNESS",
+          password: "ACA2D282-0C61-4071-80E7-1FEE713D127B",
+          Authorization:
+            "Basic UFJJTUFYRklUTkVTUzpBQ0EyRDI4Mi0wQzYxLTQwNzEtODBFNy0xRkVFNzEzRDEyN0I=",
+        },
+      })
+      .then((request) => request.data);
+
+    if (
+      cellphoneAlreadyExistsProspect.length != 0 ||
+      cellphoneAlreadyExistsMember.length != 0
+    ) {
+      isLoading(false);
+      isAlreadyExistsCellphone(true);
+      throw new Error("celular já existe");
+    }
+
+    return data;
   }
 
-  function onChangeCellphone(e: React.FormEvent<HTMLInputElement>){
-    const cellphone = e.currentTarget.value
+  const onSubmit = handleSubmit(async (data) => {
+    const allData = await handleData(data);
 
-    setResetCellphone(cellphone)
+    // await evoUrl
+    //   .post("/prospects", allData, {
+    //     headers: {
+    //       username: "PRIMAXFITNESS",
+    //       password: "ACA2D282-0C61-4071-80E7-1FEE713D127B",
+    //       Authorization:
+    //         "Basic UFJJTUFYRklUTkVTUzpBQ0EyRDI4Mi0wQzYxLTQwNzEtODBFNy0xRkVFNzEzRDEyN0I=",
+    //     },
+    //   })
+    //   .then()
+    //   .catch((e: any) => {
+    //     throw new Error(e.message);
+    //   });
+
+    isLoading(false);
+    setModal(true);
+  });
+
+  function onChangeBirthday(e: React.FormEvent<HTMLInputElement>) {
+    const birthday = e.currentTarget.value;
+
+    setResetBirthday(birthday);
   }
 
-  function resetForm(){
+  function onChangeCellphone(e: React.FormEvent<HTMLInputElement>) {
+    const cellphone = e.currentTarget.value;
 
-    reset()
+    setResetCellphone(cellphone);
+  }
 
-    setResetBirthday("")
-    setResetCellphone("")
+  function resetForm() {
+    reset();
 
-    setModal(false)
+    setResetBirthday("");
+    setResetCellphone("");
+
+    setModal(false);
   }
 
   return (
     <div className="flex items-center justify-center mt-5 bg-[#323232] py-10">
-      <form onSubmit={onSubmit} className="items-center flex flex-col justify-center bg-gray-300 rounded-xl bg-opacity-10 p-7">
+      <form
+        onSubmit={onSubmit}
+        className="items-center flex flex-col justify-center bg-gray-300 rounded-xl bg-opacity-10 p-7"
+      >
         <h2 className="text-white text-2xl font-bold mb-4">Pré-Cadastro</h2>
         <hr className="text-white w-full" />
         <div className="flex flex-col justify-center items-center pt-9">
@@ -165,11 +190,10 @@ export function ProspectForm() {
               placeholder="Nome"
               id="name"
               {...register("name", registerValidations.name)}
-              
               className="w-64 h-7 sm:w-[30rem] sm:h-10 sm:text-xl focus:border-1 focus-visible:ring rounded-md outline-none focus:border-[#2196F3] focus:placeholder-[#2196f3] pl-3"
             />
             <small className="text-red-500 mb-2 px-2">
-              {errors?.name && errors.name.message }
+              {errors?.name && errors.name.message}
             </small>
           </div>
 
@@ -185,11 +209,11 @@ export function ProspectForm() {
               placeholder="Sobrenome"
               id="lastName"
               {...register("lastName", registerValidations.lastName)}
-              defaultValue=''
+              defaultValue=""
               className="w-64 h-7 sm:w-[30rem] sm:h-10 sm:text-xl focus:border-1 focus-visible:ring rounded-md outline-none focus:border-[#2196F3] focus:placeholder-[#2196f3] pl-3"
             />
-             <small className="text-red-500 mb-2 px-2">
-              {errors?.lastName && errors.lastName.message }
+            <small className="text-red-500 mb-2 px-2">
+              {errors?.lastName && errors.lastName.message}
             </small>
           </div>
 
@@ -204,7 +228,7 @@ export function ProspectForm() {
                 type="radio"
                 value="M"
                 {...register("gender")}
-                defaultValue=''
+                defaultValue=""
                 id="male"
               />
               <label
@@ -221,7 +245,7 @@ export function ProspectForm() {
                 type="radio"
                 value="F"
                 {...register("gender")}
-                defaultValue=''
+                defaultValue=""
                 id="female"
               />
               <label
@@ -238,7 +262,7 @@ export function ProspectForm() {
                 type="radio"
                 value="P"
                 {...register("gender")}
-                defaultValue=''
+                defaultValue=""
                 id="others"
               />
               <label
@@ -251,7 +275,7 @@ export function ProspectForm() {
           </div>
 
           <small className="text-red-500 mb-2 px-2">
-              {genderNull ? "Selecione o Gênero" : ""}
+            {genderNull ? "Selecione o Gênero" : ""}
           </small>
 
           <div className="flex flex-col">
@@ -266,10 +290,10 @@ export function ProspectForm() {
               placeholder="E-mail"
               id="email"
               {...register("email", registerValidations.email)}
-              defaultValue=''
+              defaultValue=""
               className="w-64 h-7 sm:w-[30rem] sm:h-10 sm:text-xl focus:border-1 focus-visible:ring rounded-md outline-none focus:border-[#2196F3] focus:placeholder-[#2196f3] pl-3"
             />
-             <small className="text-red-500 mb-2 px-2">
+            <small className="text-red-500 mb-2 px-2">
               {errors?.email && errors.email.message}
               {alreadyExistsEmail ? "E-mail já existente" : ""}
             </small>
@@ -288,13 +312,13 @@ export function ProspectForm() {
               id="cellphone"
               mask="(99)99999-9999"
               {...register("cellphone", registerValidations.cellphone)}
-              defaultValue=''
+              defaultValue=""
               onChange={onChangeCellphone}
               value={resetCellphone}
               className="w-64 h-7 sm:w-[30rem] sm:h-10 sm:text-xl focus:border-1 focus-visible:ring rounded-md outline-none focus:border-[#2196F3] focus:placeholder-[#2196f3] pl-3"
             />
             <small className="text-red-500 mb-2 px-2">
-              {errors?.cellphone && errors.cellphone.message }
+              {errors?.cellphone && errors.cellphone.message}
               {alreadyExistsCellphone ? "Celular já existente" : ""}
             </small>
           </div>
@@ -311,14 +335,14 @@ export function ProspectForm() {
               id="birthday"
               mask="99/99/9999"
               {...register("birthday", registerValidations.birthday)}
-              defaultValue=''
+              defaultValue=""
               onChange={onChangeBirthday}
               value={resetBirthday}
               placeholder="dd/mm/yyyy"
               className="w-64 h-7 sm:w-[30rem] sm:h-10 sm:text-xl focus:border-1 focus-visible:ring rounded-md outline-none focus:border-[#2196F3] focus:placeholder-[#2196f3] pl-3"
             />
             <small className="text-red-500 mb-3 px-2">
-              {errors?.birthday && errors.birthday.message }
+              {errors?.birthday && errors.birthday.message}
             </small>
           </div>
 
@@ -331,7 +355,15 @@ export function ProspectForm() {
         </div>
       </form>
 
-      <ProspectFinished trigger={modal} setTrigger={() => resetForm()}/>
+      <ProspectFinished trigger={modal} setTrigger={() => resetForm()} />
+
+      {loading ? (
+        <div className="fixed inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex items-center justify-center">
+          <AiOutlineLoading3Quarters className="text-[#2196f3] text-5xl animate-spin" />
+        </div>
+      ) : (
+        ""
+      )}
     </div>
   );
 }
