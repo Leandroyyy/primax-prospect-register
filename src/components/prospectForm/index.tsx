@@ -5,6 +5,11 @@ import { useForm } from "react-hook-form";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { evoUrl } from "../../auth/evoAuth";
 
+<<<<<<< HEAD
+=======
+import { evoApi } from "../../services/api";
+
+>>>>>>> 079f85d (começando a tela de atiidades)
 interface Prospect {
   name: string;
   lastName: string;
