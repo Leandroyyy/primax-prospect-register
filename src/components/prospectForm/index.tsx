@@ -73,6 +73,7 @@ export function ProspectForm() {
 
     if (!data.gender) {
       isGenderNull(true);
+      isLoading(false);
       throw new Error("Favor coloque o gênero");
     }
 
