@@ -2,12 +2,10 @@ import { useState } from "react";
 import InputMask from "react-input-mask";
 import { ProspectFinished } from "../prospectFinished";
 import { useForm } from "react-hook-form";
-import axios from "axios";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
-const evoUrl = axios.create({
-  baseURL: "https://evo-integracao.w12app.com.br/api/v1/",
-});
+import { evoApi } from "../../services/api";
+
 interface Prospect {
   name: string;
   lastName: string;
@@ -77,7 +75,7 @@ export function ProspectForm() {
       throw new Error("Favor coloque o gênero");
     }
 
-    const emailAlreadyExists = await evoUrl
+    const emailAlreadyExists = await evoApi
       .get(`/members?email=${data.email}`, {
         headers: {
           username: "PRIMAXFITNESS",
@@ -94,7 +92,7 @@ export function ProspectForm() {
       throw new Error("email ja existe");
     }
 
-    const cellphoneAlreadyExistsProspect = await evoUrl
+    const cellphoneAlreadyExistsProspect = await evoApi
       .get(`/prospects?phone=${data.cellphone}`, {
         headers: {
           username: "PRIMAXFITNESS",
@@ -105,7 +103,7 @@ export function ProspectForm() {
       })
       .then((request) => request.data);
 
-    const cellphoneAlreadyExistsMember = await evoUrl
+    const cellphoneAlreadyExistsMember = await evoApi
       .get(`/members?phone=${data.cellphone}`, {
         headers: {
           username: "PRIMAXFITNESS",
@@ -131,7 +129,7 @@ export function ProspectForm() {
   const onSubmit = handleSubmit(async (data) => {
     const allData = await handleData(data);
 
-    await evoUrl
+    await evoApi
       .post("/prospects", allData, {
         headers: {
           username: "PRIMAXFITNESS",
