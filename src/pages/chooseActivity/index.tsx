@@ -8,8 +8,8 @@ export function ChooseActivity(){
     return(
         <>
             <NavBar/>
-                <AllActivity/>
-            <Footer/>
+            <AllActivity/>
+
         </>
     )
 }
