@@ -1,5 +1,6 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { evoApi } from "../../services/api"
+import { Activity } from "../activity"
 
 interface ActivityProps{
     idConfiguration:number
@@ -19,24 +20,32 @@ export function AllActivity(){
 
     const [activies, setActivies] = useState<ActivityProps[]>();
 
-    async function getAllActivties(){
-        await evoApi.get('/activities/schedule?idActivities=17', {
+    useEffect(()=>{
+        evoApi.get('/activities/schedule?idActivities=17', {
             headers: {
                 username: "PRIMAXFITNESS",
                 password: "0E2C8476-A2B2-44E2-B260-F35F24BC81CD",
                 Authorization: "Basic UFJJTUFYRklUTkVTUzowRTJDODQ3Ni1BMkIyLTQ0RTItQjI2MC1GMzVGMjRCQzgxQ0Q=",
               },
-        }).then((request) => setActivies(request?.data))
-    }
+        }).then((request) => setActivies(request.data))
+    },[])
 
-
-    console.log(activies? activies.map((activity) => {
-        console.log(activity.instructor,activity.startTime)
-    }) : "");
+    const activity = activies?.map((activity)=>{
+        return <Activity 
+        name={activity.name}
+        area={activity.area}
+        activityDate={activity.activityDate}
+        startTime={activity.startTime}
+        capacity={activity.capacity}
+        ocupation={activity.ocupation}
+        instructor={activity.instructor}
+        instructorPhoto={activity.instructorPhoto}
+        />
+    })
 
     return(
-        <section>
-            <button onClick={getAllActivties}>puxar lista</button>
+        <section className="overflow-scroll bg-[#323232] flex flex-col sm:flex-row">
+            {activity}
         </section>
     )
 }
