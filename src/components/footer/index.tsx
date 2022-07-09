@@ -3,7 +3,7 @@ import { BsWhatsapp, BsInstagram } from "react-icons/bs";
 
 export function Footer() {
   return (
-    <div className="h-12 w-full flex items-center justify-evenly sm:h-20">
+    <footer className="h-12 w-full flex items-center justify-evenly sm:h-20">
       <div>
         <a
           href="https://www.primaxacademia.com.br"
@@ -42,6 +42,6 @@ export function Footer() {
           </a>
         </div>
       </div>
-    </div>
+    </footer>
   );
 }

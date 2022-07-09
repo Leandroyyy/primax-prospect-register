@@ -17,7 +17,6 @@ function App() {
         <Route index element={<RegisterProspect/>}/>
         <Route path='/chooseClass' element={<ChooseActivity/>}/>
       </Routes>
-      
     </BrowserRouter>
   )
 }
