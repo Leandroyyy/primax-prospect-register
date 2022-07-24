@@ -5,7 +5,7 @@ module.exports = {
     colors:{
       'primaxBlue':'#2196f3',
       'white':'#fff',
-      'gray':'#3a3a3a'
+      'gray':'#424343'
     }
   },
   plugins: [
