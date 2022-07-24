@@ -19,49 +19,59 @@ interface ActivityScheduleProps {
   activityDate: string;
 }
 
-// interface ActivityProps {
-//     idActivity:number
-//     photo:string
-//     name:string
-//     color:string
-//     activityGroup:string
-//     totalRecords:number
-// }
-
-export function SelectCalendar() {
-
-  const formattedToday = format(new Date(), "yyyy/MM/dd")
+export function ShowActivitiesMobile() {
+  const formattedToday = format(addDays(new Date(), 1), "yyyy/MM/dd");
   const [showDay, setShowDay] = useState<string>(formattedToday);
 
   function handleDay(e: React.FormEvent<HTMLInputElement>) {
     const day = e.currentTarget.value;
-
     const plusDay = addDays(new Date(day), 1);
-
     setShowDay(format(new Date(plusDay), "yyyy/MM/dd"));
   }
 
-  const formattedDay = format(new Date(showDay), 'dd/MM/yyyy')
+  const formattedDay = format(new Date(showDay), "dd/MM/yyyy");
+
+  const placeholderInputDate = format(new Date(showDay), "yyyy-MM-dd");
+
+  if (new Date(formattedToday) > new Date(showDay)) {
+    console.log("dia anterior");
+  }
+
+  if (addDays(new Date(formattedToday), 7) <= new Date(showDay)) {
+    console.log("dias depois");
+  }
 
   return (
     <>
-      <AllActivityMobile
+      <div className="mt-5 py-2 bg-primaxBlue w-full flex flex-col items-center justify-center rounded-md">
+        <h1>
+          <strong className="text-white">Aulas do dia:</strong>
+        </h1>
+        <input
+          type="date"
+          id="chooseDay"
+          className="rounded-md h-5 w-28"
+          onChange={handleDay}
+          defaultValue={placeholderInputDate}
+        />
+      </div>
+      <ActivitiesMobile
         day={formattedDay}
         date={showDay}
         handleDay={handleDay}
-      />
+      /> 
     </>
   );
 }
 
-function AllActivityMobile(props: any) {
+function ActivitiesMobile(props: any) {
   const [activities, setActivities] = useState<ActivityScheduleProps[]>();
   const [showDay, setShowDay] = useState<string>(props.date);
   const [loading, isLoading] = useState<boolean>(false);
 
   useEffect(() => {
     setShowDay(props.date);
-     evoApi
+    evoApi
       .get(`/activities/schedule?date=${showDay}&idActivities=17`, {
         headers: {
           username: "PRIMAXFITNESS",
@@ -74,7 +84,6 @@ function AllActivityMobile(props: any) {
   }, [showDay, props]);
 
   const showActivities = activities?.map((activity) => {
-    
     if (activity.ocupation == activity.capacity) {
       return;
     }
@@ -103,25 +112,9 @@ function AllActivityMobile(props: any) {
       className="h-[86vh] overflow-x-scroll bg-[#313131] flex flex-col items-center sm:flex-row 
         scrollbar-thumb-primaxBlue scrollbar-thin"
     >
-      <div className="my-10 py-2 bg-primaxBlue w-full flex flex-col items-center justify-center rounded-md">
-        <h1><strong className="text-white">Aulas do dia:</strong></h1>
-        <input
-          type="date"
-          id="chooseDay"
-          className="rounded-md h-5 w-28"
-          onChange={props.handleDay}
-          defaultValue='2022-07-24'
-        />
-      </div>
-      <ul>
-        {showActivities}
-      </ul>
+      <ul>{showActivities}</ul>
 
-      {loading ? (
-        <Loading/>
-      ) : (
-        ""
-      )}
+      {loading ? <Loading /> : ""}
     </section>
   );
 }

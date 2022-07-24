@@ -232,7 +232,7 @@ export function ProspectForm() {
                 id="male"
               />
               <label
-                className="flex py-0.5 px-2 text-sm bg-primaxBlue text-white border rounded-lg cursor-pointer focus:outline-none hover:text-primaxBlue hover:bg-gray-50 peer-checked:ring-primaxBlue peer-checked:bg-white peer-checked:text-primaxBlue peer-checked:ring-2 sm:text-lg duration-300"
+                className="flex py-0.5 px-2 text-sm bg-primaxBlue text-white border rounded-lg cursor-pointer focus:outline-none hover:text-primaxBlue hover:bg-white peer-checked:ring-primaxBlue peer-checked:bg-white peer-checked:text-primaxBlue peer-checked:ring-2 sm:text-lg duration-300"
                 htmlFor="male"
               >
                 Masculino
@@ -249,7 +249,7 @@ export function ProspectForm() {
                 id="female"
               />
               <label
-                className="flex py-0.5 px-2 text-sm bg-primaxBlue text-white border rounded-lg cursor-pointer focus:outline-none hover:text-primaxBlue hover:bg-gray-50 peer-checked:ring-primaxBlue peer-checked:bg-white peer-checked:text-primaxBlue peer-checked:ring-2 sm:text-lg duration-300"
+                className="flex py-0.5 px-2 text-sm bg-primaxBlue text-white border rounded-lg cursor-pointer focus:outline-none hover:text-primaxBlue hover:bg-white peer-checked:ring-primaxBlue peer-checked:bg-white peer-checked:text-primaxBlue peer-checked:ring-2 sm:text-lg duration-300"
                 htmlFor="female"
               >
                 Feminino
@@ -266,7 +266,7 @@ export function ProspectForm() {
                 id="others"
               />
               <label
-                className="flex py-0.5 px-2 text-sm bg-primaxBlue text-white border rounded-lg cursor-pointer focus:outline-none hover:text-primaxBlue hover:bg-gray-50 peer-checked:ring-primaxBlue peer-checked:bg-white peer-checked:text-primaxBlue peer-checked:ring-2 sm:text-lg duration-300"
+                className="flex py-0.5 px-2 text-sm bg-primaxBlue text-white border rounded-lg cursor-pointer focus:outline-none hover:text-primaxBlue hover:bg-white peer-checked:ring-primaxBlue peer-checked:bg-white peer-checked:text-primaxBlue peer-checked:ring-2 sm:text-lg duration-300"
                 htmlFor="others"
               >
                 Outros
