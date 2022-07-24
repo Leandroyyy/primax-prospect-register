@@ -8,6 +8,7 @@ import { evoUrl } from "../../auth/evoAuth";
 <<<<<<< HEAD
 =======
 import { evoApi } from "../../services/api";
+import { Loading } from "../loading";
 
 >>>>>>> 079f85d (começando a tela de atiidades)
 interface Prospect {
@@ -148,7 +149,7 @@ export function ProspectForm() {
     <div className="flex items-center justify-center mt-5 bg-[#323232] py-10">
       <form
         onSubmit={onSubmit}
-        className="items-center flex flex-col justify-center bg-gray-300 rounded-xl bg-opacity-10 p-7"
+        className="items-center flex flex-col justify-center bg-gray rounded-xl p-7"
       >
         <h2 className="text-white text-2xl font-bold mb-4">Pré-Cadastro</h2>
         <hr className="text-white w-full" />
@@ -165,7 +166,7 @@ export function ProspectForm() {
               placeholder="Nome"
               id="name"
               {...register("name", registerValidations.name)}
-              className="w-64 h-7 sm:w-[30rem] sm:h-10 sm:text-xl focus:border-1 focus-visible:ring rounded-md outline-none focus:border-[#2196F3] focus:placeholder-[#2196f3] pl-3"
+              className="w-64 h-7 sm:w-[30rem] sm:h-10 sm:text-xl focus:border-1 focus-visible:ring rounded-md outline-none focus:border-primaxBlue focus:placeholder-primaxBlue pl-3"
             />
             <small className="text-red-500 mb-2 px-2">
               {errors?.name && errors.name.message}
@@ -185,7 +186,7 @@ export function ProspectForm() {
               id="lastName"
               {...register("lastName", registerValidations.lastName)}
               defaultValue=""
-              className="w-64 h-7 sm:w-[30rem] sm:h-10 sm:text-xl focus:border-1 focus-visible:ring rounded-md outline-none focus:border-[#2196F3] focus:placeholder-[#2196f3] pl-3"
+              className="w-64 h-7 sm:w-[30rem] sm:h-10 sm:text-xl focus:border-1 focus-visible:ring rounded-md outline-none focus:border-primaxBlue focus:placeholder-primaxBlue pl-3"
             />
             <small className="text-red-500 mb-2 px-2">
               {errors?.lastName && errors.lastName.message}
@@ -207,7 +208,7 @@ export function ProspectForm() {
                 id="male"
               />
               <label
-                className="flex py-0.5 px-2 text-sm bg-[#2196F3] text-white border rounded-lg cursor-pointer focus:outline-none hover:text-[#2196F3] hover:bg-gray-50 peer-checked:ring-[#2196F3] peer-checked:bg-white peer-checked:text-[#2196F3] peer-checked:ring-2 sm:text-lg duration-300"
+                className="flex py-0.5 px-2 text-sm bg-primaxBlue text-white border rounded-lg cursor-pointer focus:outline-none hover:text-primaxBlue hover:bg-gray-50 peer-checked:ring-primaxBlue peer-checked:bg-white peer-checked:text-primaxBlue peer-checked:ring-2 sm:text-lg duration-300"
                 htmlFor="male"
               >
                 Masculino
@@ -224,7 +225,7 @@ export function ProspectForm() {
                 id="female"
               />
               <label
-                className="flex py-0.5 px-2 text-sm bg-[#2196F3] text-white border rounded-lg cursor-pointer focus:outline-none hover:text-[#2196F3] hover:bg-gray-50 peer-checked:ring-[#2196F3] peer-checked:bg-white peer-checked:text-[#2196F3] peer-checked:ring-2 sm:text-lg duration-300"
+                className="flex py-0.5 px-2 text-sm bg-primaxBlue text-white border rounded-lg cursor-pointer focus:outline-none hover:text-primaxBlue hover:bg-gray-50 peer-checked:ring-primaxBlue peer-checked:bg-white peer-checked:text-primaxBlue peer-checked:ring-2 sm:text-lg duration-300"
                 htmlFor="female"
               >
                 Feminino
@@ -241,7 +242,7 @@ export function ProspectForm() {
                 id="others"
               />
               <label
-                className="flex py-0.5 px-2 text-sm bg-[#2196F3] text-white border rounded-lg cursor-pointer focus:outline-none hover:text-[#2196F3] hover:bg-gray-50 peer-checked:ring-[#2196F3] peer-checked:bg-white peer-checked:text-[#2196F3] peer-checked:ring-2 sm:text-lg duration-300"
+                className="flex py-0.5 px-2 text-sm bg-primaxBlue text-white border rounded-lg cursor-pointer focus:outline-none hover:text-primaxBlue hover:bg-gray-50 peer-checked:ring-primaxBlue peer-checked:bg-white peer-checked:text-primaxBlue peer-checked:ring-2 sm:text-lg duration-300"
                 htmlFor="others"
               >
                 Outros
@@ -266,7 +267,7 @@ export function ProspectForm() {
               id="email"
               {...register("email", registerValidations.email)}
               defaultValue=""
-              className="w-64 h-7 sm:w-[30rem] sm:h-10 sm:text-xl focus:border-1 focus-visible:ring rounded-md outline-none focus:border-[#2196F3] focus:placeholder-[#2196f3] pl-3"
+              className="w-64 h-7 sm:w-[30rem] sm:h-10 sm:text-xl focus:border-1 focus-visible:ring rounded-md outline-none focus:border-primaxBlue focus:placeholder-primaxBlue pl-3"
             />
             <small className="text-red-500 mb-2 px-2">
               {errors?.email && errors.email.message}
@@ -290,7 +291,7 @@ export function ProspectForm() {
               defaultValue=""
               onChange={onChangeCellphone}
               value={resetCellphone}
-              className="w-64 h-7 sm:w-[30rem] sm:h-10 sm:text-xl focus:border-1 focus-visible:ring rounded-md outline-none focus:border-[#2196F3] focus:placeholder-[#2196f3] pl-3"
+              className="w-64 h-7 sm:w-[30rem] sm:h-10 sm:text-xl focus:border-1 focus-visible:ring rounded-md outline-none focus:border-primaxBlue focus:placeholder-primaxBlue pl-3"
             />
             <small className="text-red-500 mb-2 px-2">
               {errors?.cellphone && errors.cellphone.message}
@@ -314,7 +315,7 @@ export function ProspectForm() {
               onChange={onChangeBirthday}
               value={resetBirthday}
               placeholder="dd/mm/yyyy"
-              className="w-64 h-7 sm:w-[30rem] sm:h-10 sm:text-xl focus:border-1 focus-visible:ring rounded-md outline-none focus:border-[#2196F3] focus:placeholder-[#2196f3] pl-3"
+              className="w-64 h-7 sm:w-[30rem] sm:h-10 sm:text-xl focus:border-1 focus-visible:ring rounded-md outline-none focus:border-primaxBlue focus:placeholder-primaxBlue pl-3"
             />
             <small className="text-red-500 mb-3 px-2">
               {errors?.birthday && errors.birthday.message}
@@ -323,7 +324,7 @@ export function ProspectForm() {
 
           <button
             type="submit"
-            className="bg-[#2196F3] hover:bg-white px-3 py-1 text-lg text-white hover:text-[#2196F3] rounded-lg duration-300"
+            className="bg-primaxBlue hover:bg-white px-3 py-1 text-lg text-white hover:text-primaxBlue rounded-lg duration-300"
           >
             Cadastrar
           </button>
@@ -333,9 +334,7 @@ export function ProspectForm() {
       <ProspectFinished trigger={modal} setTrigger={() => resetForm()} />
 
       {loading ? (
-        <div className="fixed inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex items-center justify-center">
-          <AiOutlineLoading3Quarters className="text-[#2196f3] text-5xl animate-spin" />
-        </div>
+        <Loading/>
       ) : (
         ""
       )}
