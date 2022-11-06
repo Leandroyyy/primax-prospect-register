@@ -1,13 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import InputMask from "react-input-mask";
 import { ProspectFinished } from "../prospectFinished";
 import { useForm } from "react-hook-form";
-import axios from "axios";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { evoUrl } from "../../auth/evoAuth";
 
-const evoUrl = axios.create({
-  baseURL: "https://evo-integracao.w12app.com.br/api/v1/",
-});
 interface Prospect {
   name: string;
   lastName: string;
@@ -78,14 +75,7 @@ export function ProspectForm() {
     }
 
     const emailAlreadyExists = await evoUrl
-      .get(`/members?email=${data.email}`, {
-        headers: {
-          username: "PRIMAXFITNESS",
-          password: "ACA2D282-0C61-4071-80E7-1FEE713D127B",
-          Authorization:
-            "Basic UFJJTUFYRklUTkVTUzpBQ0EyRDI4Mi0wQzYxLTQwNzEtODBFNy0xRkVFNzEzRDEyN0I=",
-        },
-      })
+      .get(`/members?email=${data.email}`)
       .then((request) => request.data);
 
     if (emailAlreadyExists.length != 0) {
@@ -95,25 +85,11 @@ export function ProspectForm() {
     }
 
     const cellphoneAlreadyExistsProspect = await evoUrl
-      .get(`/prospects?phone=${data.cellphone}`, {
-        headers: {
-          username: "PRIMAXFITNESS",
-          password: "ACA2D282-0C61-4071-80E7-1FEE713D127B",
-          Authorization:
-            "Basic UFJJTUFYRklUTkVTUzpBQ0EyRDI4Mi0wQzYxLTQwNzEtODBFNy0xRkVFNzEzRDEyN0I=",
-        },
-      })
+      .get(`/prospects?phone=${data.cellphone}`)
       .then((request) => request.data);
 
     const cellphoneAlreadyExistsMember = await evoUrl
-      .get(`/members?phone=${data.cellphone}`, {
-        headers: {
-          username: "PRIMAXFITNESS",
-          password: "ACA2D282-0C61-4071-80E7-1FEE713D127B",
-          Authorization:
-            "Basic UFJJTUFYRklUTkVTUzpBQ0EyRDI4Mi0wQzYxLTQwNzEtODBFNy0xRkVFNzEzRDEyN0I=",
-        },
-      })
+      .get(`/members?phone=${data.cellphone}`)
       .then((request) => request.data);
 
     if (
@@ -132,14 +108,7 @@ export function ProspectForm() {
     const allData = await handleData(data);
 
     await evoUrl
-      .post("/prospects", allData, {
-        headers: {
-          username: "PRIMAXFITNESS",
-          password: "ACA2D282-0C61-4071-80E7-1FEE713D127B",
-          Authorization:
-            "Basic UFJJTUFYRklUTkVTUzpBQ0EyRDI4Mi0wQzYxLTQwNzEtODBFNy0xRkVFNzEzRDEyN0I=",
-        },
-      })
+      .post("/prospects", allData)
       .then()
       .catch((e: any) => {
         throw new Error(e.message);
