@@ -13,6 +13,7 @@ interface Prospect {
   birthday: string;
   gender: string;
   currentStep: string;
+  tokenGympass?: string;
 }
 
 export function ProspectForm() {
@@ -48,6 +49,10 @@ export function ProspectForm() {
     birthday: {
       required: "A data de nascimento é obrigatório",
     },
+    tokenGympass:{
+      minLength: 13,
+      message: "Deve possuir 13 digitos"
+    }
   };
 
   async function handleData(data: Prospect): Promise<Prospect> {
@@ -104,15 +109,23 @@ export function ProspectForm() {
     return data;
   }
 
-  const onSubmit = handleSubmit(async (data) => {
-    const allData = await handleData(data);
+  const onSubmit = handleSubmit(async (prospect) => {
+    const allData = await handleData(prospect);
 
-    await evoUrl
+    const { data } = await evoUrl
       .post("/prospects", allData)
       .then()
       .catch((e: any) => {
         throw new Error(e.message);
       });
+
+    //this only exists to add tokenGympass the post route doesnt work to create a prospect with tokengympass
+    await evoUrl
+      .put("/prospects", {...allData, idProspect: data.idProspect})
+      .then()
+      .catch((e: any) => {
+        throw new Error(e.message);
+      });  
 
     isLoading(false);
     setModal(true);
@@ -293,7 +306,7 @@ export function ProspectForm() {
             </small>
           </div>
 
-          <div className="flex flex-col mb-5">
+          <div className="flex flex-col">
             <label
               htmlFor="birthday"
               className="text-xs text-white mb-1 px-1 sm:text-sm"
@@ -313,6 +326,29 @@ export function ProspectForm() {
             />
             <small className="text-red-500 mb-3 px-2">
               {errors?.birthday && errors.birthday.message}
+            </small>
+          </div>
+
+          <div className="flex flex-col mb-5">
+            <label
+              htmlFor="tokenGympass"
+              className="text-xs text-white mb-1 px-1 sm:text-sm"
+            >
+              Token Gympass (caso possuir convênio)
+            </label>
+            <input
+              type="text"
+              placeholder="Token Gympass"
+              id="tokenGympass"
+              {...register("tokenGympass", registerValidations.tokenGympass)}
+              defaultValue=""
+              max='13'
+              min='13'
+              maxLength={13}
+              className="w-64 h-7 sm:w-[30rem] sm:h-10 sm:text-xl focus:border-1 focus-visible:ring rounded-md outline-none focus:border-[#2196F3] focus:placeholder-[#2196f3] pl-3"
+            />
+            <small className="text-red-500 mb-2 px-2">
+              {errors?.tokenGympass && <>Deve possuir 13 dígitos</>}
             </small>
           </div>
 
