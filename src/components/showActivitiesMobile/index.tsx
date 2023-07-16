@@ -4,6 +4,7 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { evoApi } from "../../services/api";
 import { Activity } from "../activity";
 import { Loading } from "../loading";
+import { evoUrl } from "../../auth/evoAuth";
 
 interface ActivityScheduleProps {
   idConfiguration: number;
@@ -59,7 +60,7 @@ export function ShowActivitiesMobile() {
         day={formattedDay}
         date={showDay}
         handleDay={handleDay}
-      /> 
+      />
     </>
   );
 }
@@ -71,15 +72,8 @@ function ActivitiesMobile(props: any) {
 
   useEffect(() => {
     setShowDay(props.date);
-    evoApi
-      .get(`/activities/schedule?date=${showDay}&idActivities=17`, {
-        headers: {
-          username: "PRIMAXFITNESS",
-          password: "0E2C8476-A2B2-44E2-B260-F35F24BC81CD",
-          Authorization:
-            "Basic UFJJTUFYRklUTkVTUzowRTJDODQ3Ni1BMkIyLTQ0RTItQjI2MC1GMzVGMjRCQzgxQ0Q=",
-        },
-      })
+    evoUrl
+      .get(`/activities/schedule?date=${showDay}&idActivities=17`)
       .then((request) => setActivities(request.data));
   }, [showDay, props]);
 
