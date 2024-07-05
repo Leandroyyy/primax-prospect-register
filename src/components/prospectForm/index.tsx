@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
-import InputMask from "react-input-mask";
-import { ProspectFinished } from "../prospectFinished";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import InputMask from "react-input-mask";
 import { evoUrl } from "../../auth/evoAuth";
+import { ProspectFinished } from "../prospectFinished";
 
 interface Prospect {
   name: string;
@@ -13,7 +13,7 @@ interface Prospect {
   birthday: string;
   gender: string;
   currentStep: string;
-  tokenGympass?: string;
+  tokenWellhub?: string;
 }
 
 export function ProspectForm() {
@@ -49,10 +49,10 @@ export function ProspectForm() {
     birthday: {
       required: "A data de nascimento é obrigatório",
     },
-    tokenGympass:{
+    tokenWellhub: {
       minLength: 13,
-      message: "Deve possuir 13 digitos"
-    }
+      message: "Deve possuir 13 digitos",
+    },
   };
 
   async function handleData(data: Prospect): Promise<Prospect> {
@@ -119,13 +119,13 @@ export function ProspectForm() {
         throw new Error(e.message);
       });
 
-    //this only exists to add tokenGympass the post route doesnt work to create a prospect with tokengympass
+    //this only exists to add tokenWellhub the post route doesnt work to create a prospect with tokenWellhub
     await evoUrl
-      .put("/prospects", {...allData, idProspect: data.idProspect})
+      .put("/prospects", { ...allData, idProspect: data.idProspect })
       .then()
       .catch((e: any) => {
         throw new Error(e.message);
-      });  
+      });
 
     isLoading(false);
     setModal(true);
@@ -331,24 +331,24 @@ export function ProspectForm() {
 
           <div className="flex flex-col mb-5">
             <label
-              htmlFor="tokenGympass"
+              htmlFor="tokenWellhub"
               className="text-xs text-white mb-1 px-1 sm:text-sm"
             >
-              Token Gympass (caso possuir convênio)
+              Token Wellhub (caso possuir convênio)
             </label>
             <input
               type="text"
-              placeholder="Token Gympass"
-              id="tokenGympass"
-              {...register("tokenGympass", registerValidations.tokenGympass)}
+              placeholder="Token Wellhub"
+              id="tokenWellhub"
+              {...register("tokenWellhub", registerValidations.tokenWellhub)}
               defaultValue=""
-              max='13'
-              min='13'
+              max="13"
+              min="13"
               maxLength={13}
               className="w-64 h-7 sm:w-[30rem] sm:h-10 sm:text-xl focus:border-1 focus-visible:ring rounded-md outline-none focus:border-[#2196F3] focus:placeholder-[#2196f3] pl-3"
             />
             <small className="text-red-500 mb-2 px-2">
-              {errors?.tokenGympass && <>Deve possuir 13 dígitos</>}
+              {errors?.tokenWellhub && <>Deve possuir 13 dígitos</>}
             </small>
           </div>
 
